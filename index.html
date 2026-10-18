@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אוטומציה לניהול ותיעדוף משימות ייצור</title>
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: rgba(22, 31, 48, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary-cyan: #00f2fe;
+      --primary-blue: #4facfe;
+      --accent-orange: #ff5e62;
+      --accent-yellow: #ff9966;
+      --text-bright: #ffffff;
+      --text-muted: #94a3b8;
+      --error-color: #ff4b4b;
+      --error-bg: rgba(255, 75, 75, 0.15);
+      --success-color: #00e676;
+      --success-bg: rgba(0, 230, 118, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.15) 0%, transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(255, 94, 98, 0.12) 0%, transparent 35%);
+      background-attachment: fixed;
+      color: var(--text-bright);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 50px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: linear-gradient(90deg, rgba(0,242,254,0.15), rgba(255,94,98,0.15));
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 30%, var(--primary-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .cta-button {
+      display: inline-block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-blue) 100%);
+      color: #000000;
+      text-align: center;
+      padding: 18px 28px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 36px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--primary-cyan), var(--accent-orange));
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-bright);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .problem-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .problem-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px 20px;
+      border-radius: 10px;
+      border-right: 3px solid var(--accent-orange);
+      font-size: 1.05rem;
+    }
+
+    .problem-icon {
+      color: var(--accent-orange);
+      font-weight: bold;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      counter-reset: step-counter;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .step-number {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      min-width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
+      color: #000;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(255, 94, 98, 0.3);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary-cyan);
+      margin-bottom: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text-bright);
+      font-size: 0.95rem;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1rem;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      background-color: rgba(15, 23, 42, 0.6);
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--primary-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+      background-color: rgba(15, 23, 42, 0.9);
+    }
+
+    .message-box {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .message-box.error {
+      background-color: var(--error-bg);
+      color: var(--error-color);
+      border: 1px solid rgba(255, 75, 75, 0.4);
+    }
+
+    .message-box.success {
+      background-color: var(--success-bg);
+      color: var(--success-color);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .message-box.success h3 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 16px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .subtitle {
+        font-size: 1.05rem;
+      }
+      .section-card {
+        padding: 24px 18px;
+      }
+      .step-item {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header>
+      <div class="badge">אוטומציה תעשייתית חכמה</div>
+      <h1>מעבר מניהול ידני עמוס לתהליך אוטומטי, מדויק ושקוף</h1>
+      <p class="subtitle">מערכת מתקדמת לחלוקה, תיעדוף ודיווח משימות ייצור במפעל</p>
+    </header>
+
+    <div style="margin-bottom: 40px;">
+      <a href="#lead-form-container" class="cta-button">להצעת מחיר ובדיקת התאמה למפעל</a>
+    </div>
+
+    <section class="section-card">
+      <h2 class="section-title">האתגר בניהול הייצור הקיים</h2>
+      <ul class="problem-list">
+        <li class="problem-item">
+          <span class="problem-icon">✕</span>
+          <div><strong>עומס ובלבול בשיבוץ:</strong> חוסר במנגנון מחושב יוצר עומס בלתי מבוקר בלוח הזמנים.</div>
+        </li>
+        <li class="problem-item">
+          <span class="problem-icon">✕</span>
+          <div><strong>עיכוב משימות דחופות:</strong> תיעדוף ידני שגוי גורם לדחיית פרויקטים קריטיים.</div>
+        </li>
+        <li class="problem-item">
+          <span class="problem-icon">✕</span>
+          <div><strong>היעדר שקיפות בסוף יום:</strong> אין תמונה מרוכזת של משימות שבוצעו מול משימות פתוחות.</div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section-card">
+      <h2 class="section-title">איך המערכת עובדת</h2>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">קליטה מיידית</div>
+            <div>הזנת נתונים פשוטה ומהירה על ידי המזכירות בממשק ייעודי (העלאת קובץ או הזנה ידנית).</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">שיבוץ ותיעדוף מבוסס AI</div>
+            <div>חישוב אוטומטי לפי תאריך אספקה, דחיפות, זמינות מכונות ומיומנויות עובדים.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">בקרה והתראות בזמן אמת</div>
+            <div>תצוגת משימות יומית לעובדים והתראה אוטומטית למנהל על משימה שלא בוצעה בזמן.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="lead-form-container">
+      <h2 class="section-title">תיאום פגישת אפיון</h2>
+      
+      <form id="lead-form" novalidate>
+        <div class="form-group">
+          <label for="fullName">שם מלא</label>
+          <input type="text" id="fullName" name="fullName" placeholder="הכנס שם מלא" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">כתובת מייל</label>
+          <input type="email" id="email" name="email" placeholder="name@company.com" required>
+        </div>
+
+        <div id="error-message" class="message-box error hidden"></div>
+
+        <button type="submit" class="cta-button" style="margin-top: 10px;">שלח פרטים להתאמת פתרון</button>
+      </form>
+
+      <div id="success-message" class="message-box success hidden">
+        <h3>הפרטים נקלטו בהצלחה</h3>
+        <p>פנייתך הועברה. ניצור עמך קשר בימים הקרובים לתיאום פגישת אפיון ראשונית לבחינת התהליכים במפעל.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    document.getElementById('lead-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('fullName');
+      const emailInput = document.getElementById('email');
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      const formElement = document.getElementById('lead-form');
+
+      errorMessage.classList.add('hidden');
+      errorMessage.innerText = '';
+
+      const nameVal = nameInput.value.trim();
+      const emailVal = emailInput.value.trim();
+
+      if (!nameVal || !emailVal) {
+        errorMessage.innerText = 'השליחה נכשלה. יש למלא את כל השדות ולנסות שוב.';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(emailVal)) {
+        errorMessage.innerText = 'השליחה נכשלה. כתובת המייל אינה תקינה. נסו שוב.';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+
+      formElement.classList.add('hidden');
+      successMessage.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
