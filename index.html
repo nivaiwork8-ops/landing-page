@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e1116">
+<meta name="color-scheme" content="dark">
+<title>ND Solutions | מערכת מותאמת אישית לניהול משימות במפעל</title>
+<meta name="description" content="עבודות דחופות מתעכבות ואתם עובדים מסביב לשעון? מערכת מותאמת אישית שמסדרת את המשימות במפעל. שיחת הכרות ואפיון חינמית.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0e1116;
+  --bg-2:#131922;
+  --card:#1a212b;
+  --card-2:#212a36;
+  --line:#2a3441;
+  --edge:#7d8996;          /* גבול רכיבי טופס: ניגודיות 3:1 לפחות מול הרקע */
+  --text:#e9edf2;
+  --muted:#a3aebb;
+  --amber:#f5b82e;
+  --amber-hover:#ffca52;
+  --green:#3ecf8e;
+  --red:#ff6b5e;
+  --red-text:#ff948a;
+  --ink:#0e1116;
+  --focus:#8dbcff;
+  --rh:3.4rem;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px;scroll-padding-bottom:6rem}
+body{
+  position:relative;margin:0;overflow-x:hidden;background:var(--bg);color:var(--text);
+  font-family:"Heebo","Segoe UI","Arial Hebrew",Arial,sans-serif;
+  font-size:1.125rem;line-height:1.65;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+h1,h2,h3{margin:0;line-height:1.18}
+h2{font-size:clamp(1.7rem,3.8vw,2.5rem);font-weight:800;margin-bottom:14px}
+section{position:relative;padding:84px 0}
+.sec-sub{color:var(--muted);margin:0 0 40px;max-width:36em}
+ul,ol{list-style:none}
+
+/* ---------- Focus (גלוי בכל רכיב אינטראקטיבי) ---------- */
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.btn:focus-visible{outline-color:#fff;box-shadow:0 0 0 6px #0e1116 inset}
+
+/* ---------- Skip link ---------- */
+.skip{
+  position:absolute;top:-120px;inset-inline-start:76px;z-index:100;
+  background:var(--amber);color:var(--ink);font-weight:800;padding:12px 20px;border-radius:8px;text-decoration:none;
+}
+.skip:focus{top:12px}
+main:focus{outline:none}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-block;cursor:pointer;font:inherit;font-weight:800;font-size:1.1875rem;
+  min-height:56px;padding:14px 34px;border:0;border-radius:8px;
+  background:var(--amber);color:var(--ink);
+  transition:background .15s,transform .15s,box-shadow .15s;
+}
+.btn:hover{background:var(--amber-hover);box-shadow:0 8px 28px -8px rgba(245,184,46,.55)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.7;cursor:wait}
+.micro{margin:14px 0 0;color:var(--muted);font-size:1rem}
+
+/* ---------- Top bar ---------- */
+.topbar{position:absolute;top:0;left:0;right:0;z-index:5;border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:8px 16px;min-height:64px;flex-wrap:wrap;padding-block:8px}
+.brand{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem}
+.brand i{display:block;width:14px;height:14px;background:var(--amber);border-radius:3px}
+.motion-btn{
+  margin-inline-start:auto;cursor:pointer;font:inherit;font-size:.9375rem;font-weight:700;color:var(--text);
+  background:var(--card);border:1.5px solid var(--edge);border-radius:8px;padding:8px 16px;min-height:44px;
+}
+.motion-btn:hover{border-color:var(--text)}
+
+/* אייקון נגישות צף: נשאר בפינה הימנית העליונה בזמן גלילה */
+.a11y-fab{
+  position:fixed;top:12px;right:12px;z-index:60;width:48px;height:48px;padding:0;
+  display:grid;place-items:center;cursor:pointer;border-radius:50%;
+  background:var(--amber);color:var(--ink);border:2px solid var(--ink);
+  box-shadow:0 6px 18px rgba(0,0,0,.5);transition:background .15s;
+}
+.a11y-fab:hover{background:var(--amber-hover)}
+.a11y-fab svg{width:30px;height:30px}
+@media (max-width:1180px){.topbar .wrap{padding-inline-start:78px}}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;overflow:hidden;padding-top:64px;
+  background:
+    radial-gradient(ellipse 55% 60% at 12% 18%,rgba(245,184,46,.10),transparent 70%),
+    radial-gradient(ellipse 60% 70% at 90% 90%,rgba(80,120,180,.10),transparent 70%),
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px) 0 0/56px 56px,
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px) 0 0/56px 56px,
+    var(--bg);
+}
+/* תמונת רקע אמיתית של המפעל (אופציונלי): להסיר את ההערה ולהחליף בנתיב לתמונה
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(14,17,22,.82),rgba(14,17,22,.92)),url("images/factory.jpg") center/cover;z-index:0}
+*/
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center;padding:64px 0 96px}
+h1{font-size:clamp(2.125rem,5.2vw,3.625rem);font-weight:800;line-height:1.14;margin-bottom:22px;letter-spacing:-.01em}
+.ask{font-size:clamp(1.25rem,2.6vw,1.625rem);font-weight:500;color:#d3dbe3;line-height:1.4;margin:0 0 34px;max-width:22em}
+.skyline{position:absolute;inset-inline:0;bottom:0;width:100%;height:auto;color:#10151c;z-index:1;display:block;pointer-events:none}
+.skyline{color:#17202b}
+
+/* ---------- Window mock (shared) ---------- */
+.win{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.02) inset;
+  font-size:1rem;
+}
+.win-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:13px 18px;border-bottom:1px solid var(--line);font-weight:700;background:var(--card-2)}
+.win-head small{margin-inline-start:auto;color:var(--muted);font-weight:400;font-size:.875rem;display:flex;align-items:center;gap:8px}
+.live{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(62,207,142,.55)}50%{box-shadow:0 0 0 6px rgba(62,207,142,0)}}
+.win-cols,.r{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;padding:0 18px;align-items:center}
+.win-cols{height:36px;color:var(--muted);font-size:.8125rem;font-weight:700;border-bottom:1px solid var(--line)}
+.board{position:relative;height:calc(var(--n,5) * var(--rh))}
+.r{
+  position:absolute;inset-inline:0;top:0;height:var(--rh);border-bottom:1px solid #222b37;
+  transform:translateY(calc(var(--i,0) * var(--rh)));
+  transition:transform .8s cubic-bezier(.3,.7,.2,1);
+  font-weight:600;
+}
+.mc{color:var(--muted);font-weight:500}
+.chip{justify-self:start;font-size:.8125rem;font-weight:700;padding:3px 11px;border-radius:99px;background:#2a3441;color:var(--text);white-space:nowrap;transition:background .4s,color .4s}
+.chip.hot{background:var(--amber);color:var(--ink)}
+.chip.late{background:rgba(255,107,94,.18);color:var(--red-text)}
+.chip.ok{background:rgba(62,207,142,.16);color:var(--green)}
+.chip.done{background:transparent;color:var(--muted);box-shadow:0 0 0 1px var(--line) inset}
+.chip.none{background:transparent;color:var(--muted);box-shadow:0 0 0 1px var(--line) inset;border-radius:6px}
+.toast{
+  position:absolute;inset-inline:14px;bottom:14px;display:flex;gap:12px;align-items:center;
+  background:#2b2417;border:1px solid rgba(245,184,46,.5);color:#ffe3a1;border-radius:10px;padding:12px 14px;font-size:.9375rem;font-weight:600;
+  transform:translateY(160%);opacity:0;transition:transform .6s cubic-bezier(.3,.9,.3,1),opacity .4s;
+}
+.toast.show{transform:none;opacity:1}
+.toast svg{width:22px;height:22px;flex:none;color:var(--amber)}
+
+/* ---------- Problems ---------- */
+/* כל אזור בדף בגוון רקע משלו */
+.problems-sec{background:#17202b}
+.problems{margin:0;padding:0;display:grid;gap:14px}
+.problems li{
+  display:grid;grid-template-columns:56px 1fr;gap:20px;align-items:center;
+  padding:20px 22px;background:#212c3a;border:1px solid #324152;border-inline-start:4px solid var(--red);
+  border-radius:12px;font-size:1.25rem;font-weight:600;
+}
+.ico{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);color:var(--amber)}
+.ico svg{width:30px;height:30px}
+
+/* ---------- Steps ---------- */
+.steps-sec{background:#1e3044}
+.steps{margin:48px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;position:relative}
+.steps::before,.steps::after{content:"";position:absolute;top:27px;inset-inline:28px;height:3px;border-radius:2px}
+.steps::before{background:#3a5573}
+.steps::after{
+  background:var(--amber);
+  transform:scaleX(0);transform-origin:right center;transition:transform 2.2s cubic-bezier(.4,.1,.2,1) .2s;
+}
+.steps.in::after{transform:scaleX(1)}
+.steps li{position:relative;z-index:1;display:flex;flex-direction:column}
+.node{
+  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:#1e3044;border:3px solid var(--edge);color:var(--text);
+  font-weight:800;font-size:1.4375rem;margin-bottom:20px;
+  transition:border-color .4s,color .4s,background .4s;
+}
+.steps.in .node{border-color:var(--amber);color:var(--amber);transition-delay:var(--d,0s)}
+.step-card{flex:1;background:#27405a;border:1px solid #3a5573;border-radius:12px;padding:22px 22px 24px}
+.step-card h3{font-size:1.3125rem;font-weight:800;margin-bottom:8px}
+.step-card p{margin:0;color:#c3ccd6}
+
+/* ---------- Result ---------- */
+.result-sec{background:#1c1a17}
+.after{display:inline-block;margin-bottom:14px;padding:4px 14px;border-radius:99px;background:rgba(245,184,46,.12);color:var(--amber);font-weight:700;font-size:.9375rem}
+.outs{margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.outs li{padding:22px;border-radius:12px;background:#26231f;border:1px solid #3a362f;color:#c3ccd6}
+.outs strong{display:block;color:var(--text);font-size:1.1875rem;margin-bottom:6px}
+.mock-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:center;margin-top:44px}
+
+.phone{
+  width:100%;max-width:290px;margin-inline:auto;background:var(--card);border:9px solid #2a3441;border-radius:34px;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.65);overflow:hidden;font-size:.9375rem;
+}
+.phone-top{padding:16px 18px 12px;font-weight:800;border-bottom:1px solid var(--line);background:var(--card-2)}
+.phone-top small{display:block;color:var(--muted);font-weight:400;font-size:.8125rem}
+.it{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid #222b37;font-weight:600}
+.ck{width:24px;height:24px;border-radius:50%;border:2px solid #4a5666;display:grid;place-items:center;flex:none;transition:background .35s,border-color .35s}
+.ck svg{width:14px;height:14px;opacity:0;transition:opacity .2s}
+.phone.in .it.done .ck{background:var(--green);border-color:var(--green);transition-delay:var(--d)}
+.phone.in .it.done .ck svg{opacity:1;transition-delay:var(--d);color:var(--ink)}
+.st{margin-inline-start:auto;font-size:.8125rem;font-weight:700;color:var(--muted)}
+.it.miss .st{color:var(--red-text)}
+.phone-btn{margin:16px 18px 18px;text-align:center;padding:12px;border-radius:8px;background:var(--amber);color:var(--ink);font-weight:800}
+.mock-note{margin:16px 0 0;color:var(--muted);font-size:.9375rem;text-align:center}
+
+/* ---------- Form ---------- */
+.form-sec{background:#232d39;padding-top:0}
+.hazard{
+  height:1px;background:var(--line);position:relative;
+}
+.hazard::after{content:"";position:absolute;top:-1px;inset-inline-start:max(22px,calc((100% - 1036px) / 2));width:96px;height:3px;background:var(--amber);border-radius:0 0 2px 2px}
+.form-inner{max-width:660px;padding-top:76px}
+.lead{margin:0 0 8px;color:var(--muted)}
+.req-note{margin:0 0 24px;color:var(--muted);font-size:1rem}
+.panel{display:grid;gap:20px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px 28px;box-shadow:0 30px 70px -30px rgba(0,0,0,.7)}
+.field label{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-weight:700;margin-bottom:7px}
+.opt{font-weight:400;color:var(--muted);font-size:1rem}
+input[type=text],input[type=tel],input[type=email]{
+  width:100%;font:inherit;font-size:1.125rem;min-height:54px;padding:12px 14px;border-radius:8px;
+  border:2px solid var(--edge);background:#0d1116;color:var(--text);
+}
+input[type=text]:focus,input[type=tel]:focus,input[type=email]:focus{border-color:var(--amber)}
+input[aria-invalid="true"]{border-color:var(--red)}
+.err{color:var(--red-text);font-size:1rem;margin-top:6px;font-weight:700}
+.err:empty{display:none}
+.hp{position:absolute;inset-inline-start:-9999px;width:1px;height:1px;overflow:hidden}
+.hint{position:relative;display:inline-block}
+.hint-btn{background:var(--amber);color:var(--ink);border:0;cursor:pointer;width:28px;height:28px;border-radius:50%;font:inherit;font-weight:800;line-height:1;display:grid;place-items:center;padding:0}
+.tip{
+  position:absolute;z-index:5;inset-inline-start:50%;transform:translateX(50%);bottom:calc(100% + 10px);
+  width:min(280px,72vw);background:var(--text);color:var(--ink);padding:12px 14px;border-radius:8px;
+  font-size:1rem;font-weight:500;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none;
+}
+.hint:hover .tip,.hint.open .tip,.hint:focus-within .tip{display:block}
+.hint.closed .tip{display:none!important}
+.form-error{background:rgba(255,107,94,.12);color:#ffc2bc;border:1.5px solid rgba(255,107,94,.6);padding:14px 16px;border-radius:8px;font-weight:700}
+.form-error:empty{display:none}
+.privacy{margin:0;color:var(--muted);font-size:1rem}
+.thanks{background:var(--card);border:1px solid var(--line);border-inline-start:6px solid var(--green);padding:30px 26px;border-radius:12px}
+.thanks h3{font-size:1.6875rem;margin-bottom:8px}
+.thanks p{margin:0;color:#c3ccd6}
+
+/* ---------- Footer + accessibility statement ---------- */
+footer{background:var(--bg);color:var(--muted);text-align:center;padding:22px;font-size:.9375rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:center;align-items:center}
+.linklike{font:inherit;color:var(--text);background:none;border:0;padding:10px 6px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.linklike:hover{color:var(--amber)}
+.form-sec .wrap{padding-bottom:84px}
+
+dialog{
+  background:var(--card);color:var(--text);border:1px solid var(--edge);border-radius:14px;padding:0;
+  width:min(640px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;
+}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+.dlg{padding:28px 28px 24px}
+.dlg h2{font-size:1.75rem;margin-bottom:14px}
+.dlg h3{font-size:1.1875rem;font-weight:800;margin:22px 0 6px}
+.dlg p{margin:0 0 10px;color:#d3dbe3}
+.dlg ul{margin:0;padding:0 20px 0 0;list-style:disc;color:#d3dbe3}
+.dlg li{margin-bottom:4px}
+.ph{background:var(--amber);color:var(--ink);padding:0 6px;border-radius:4px;font-weight:700}
+.dlg .btn{margin-top:22px}
+
+/* ---------- Mobile ---------- */
+@media (max-width:900px){
+  :root{--rh:3.25rem}
+  .hero-grid{grid-template-columns:1fr;gap:44px;padding:44px 0 90px}
+  .steps{grid-template-columns:1fr;gap:18px;margin-top:36px}
+  .steps::before,.steps::after{top:28px;bottom:28px;height:auto;width:3px;inset-inline:auto;inset-inline-start:27px}
+  .steps::after{transform:scaleY(0);transform-origin:center top}
+  .steps.in::after{transform:scaleY(1)}
+  .steps li{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start}
+  .node{margin-bottom:0}
+  .step-card{flex:none}
+  .outs{grid-template-columns:1fr}
+  .mock-grid{grid-template-columns:1fr;gap:36px}
+}
+@media (max-width:560px){
+  body{font-size:1.0625rem}
+  section{padding:58px 0}
+  .btn{width:100%}
+  .problems li{grid-template-columns:48px 1fr;gap:14px;padding:16px;font-size:1.125rem}
+  .ico{width:48px;height:48px}
+  .win-cols,.r{padding:0 12px;gap:6px;grid-template-columns:1.1fr 1fr 1fr}
+  .r{font-size:.9375rem}
+  .panel{padding:24px 16px}
+  .form-inner{padding-top:56px}
+  .dlg{padding:22px 18px}
+}
+
+/* ---------- Reduced motion / user pause ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .live{animation:none}
+  .r,.toast,.steps::after,.node,.ck,.ck svg,.chip,.a11y-fab{transition:none}
+}
+html.paused .live{animation:none}
+html.paused .r,html.paused .toast,html.paused .steps::after,html.paused .node,html.paused .ck,html.paused .ck svg,html.paused .chip{transition:none}
+
+@media (forced-colors:active){
+  .chip,.btn,.motion-btn,.ico,.node,.a11y-fab{border:1px solid CanvasText}
+  .skyline{display:none}
+}
+
+/* =====================================================
+   חלונית הגדרות נגישות
+   ===================================================== */
+html{scroll-padding-top:80px}
+.a11y-fab:focus-visible{outline-color:#fff}
+.ap-panel{
+  position:fixed;top:68px;inset-inline-start:12px;z-index:200;width:min(300px,calc(100vw - 24px));
+  max-height:calc(100vh - 80px);overflow:auto;background:var(--card);color:var(--text);
+  border:1px solid var(--edge);border-radius:14px;padding:14px;box-shadow:0 30px 70px -10px rgba(0,0,0,.7);
+  font-size:.875rem;line-height:1.45;
+}
+.ap-panel[hidden]{display:none}
+.ap-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.ap-title{margin:0;font-size:1.0625rem;font-weight:800}
+.ap-x{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--edge);background:transparent;color:var(--text);cursor:pointer;display:grid;place-items:center;padding:0}
+.ap-x svg{width:16px;height:16px}
+.ap-size{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:6px 10px;border:1.5px solid var(--line);border-radius:10px;margin-bottom:8px;font-weight:700}
+.ap-ctl{display:flex;align-items:center;gap:8px}
+.ap-step{min-width:44px;height:44px;border-radius:8px;border:1.5px solid var(--edge);background:var(--card-2);color:var(--text);font:inherit;font-weight:800;font-size:1rem;cursor:pointer;padding:0 6px}
+.ap-step[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
+.ap-out{min-width:3em;text-align:center;font-weight:700}
+.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ap-opt{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:6px 10px;
+  border:1.5px solid var(--line);border-radius:10px;font-weight:600;cursor:pointer;font-size:.875rem;line-height:1.25;
+}
+.ap-opt:has(input:checked){border-color:var(--amber);background:rgba(245,184,46,.10)}
+.ap-opt:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.ap-opt input{
+  -webkit-appearance:none;appearance:none;width:24px;height:24px;flex:none;margin:0;cursor:pointer;
+  border:2px solid var(--edge);border-radius:5px;background:transparent;display:grid;place-items:center;
+}
+.ap-opt input:focus-visible{outline:none}
+.ap-opt input:checked{background:var(--amber);border-color:var(--amber)}
+.ap-opt input:checked::after{content:"";width:10px;height:6px;border:solid #0e1116;border-width:0 0 3px 3px;transform:rotate(-45deg) translate(1px,-1px)}
+.ap-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.ap-reset{min-height:44px;padding:6px 12px;border-radius:8px;border:1.5px solid var(--edge);background:var(--card-2);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+.ap-note{margin:8px 0 0;color:var(--muted);font-size:.8125rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:340px){.ap-grid{grid-template-columns:1fr}}
+
+/* ---------- התאמות שהמשתמש בוחר ---------- */
+html.a-gray{filter:grayscale(1)}
+html.a-readable body,html.a-readable body *{font-family:Arial,Tahoma,"Segoe UI",sans-serif!important}
+html.a-spacing body *{line-height:1.8!important;letter-spacing:.06em!important;word-spacing:.12em!important}
+html.a-links a,html.a-links .linklike{text-decoration:underline!important;text-underline-offset:4px;outline:2px solid currentColor;outline-offset:3px;background:rgba(245,184,46,.25)!important}
+html.a-heads h1,html.a-heads h2,html.a-heads h3,html.a-heads .ap-title{outline:2px dashed currentColor;outline-offset:6px;background:rgba(245,184,46,.2)}
+html.a-focus *:focus,html.a-focus *:focus-visible{outline:4px solid #ffe600!important;outline-offset:4px!important;box-shadow:0 0 0 8px #000!important}
+html.a-cursor,html.a-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M3 2l7 19 3-8 8-3z' fill='%23fff' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 6 4,auto!important}
+html.a-cursor a,html.a-cursor button,html.a-cursor label,html.a-cursor input,html.a-cursor [role="button"],html.a-cursor .linklike{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M3 2l7 19 3-8 8-3z' fill='%23ffe600' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 6 4,pointer!important}
+
+/* רקע בהיר */
+html.a-light{color-scheme:light;--text:#14181d;--muted:#46515e;--card:#fff;--card-2:#e9eef4;--line:#c3ccd6;--edge:#5b6775;--focus:#0b5fff;--red-text:#a32117;--green:#0b6b45}
+html.a-light body{background:#fff}
+html.a-light .hero{background:#eef2f6}
+html.a-light .skyline{color:#dde5ee}
+html.a-light .problems-sec,html.a-light .result-sec{background:#fff}
+html.a-light .steps-sec,html.a-light .form-sec{background:#eef2f6}
+html.a-light footer{background:#e3e9f0;color:#2f3b49}
+html.a-light .ask{color:#2f3b49}
+html.a-light .problems li{background:#fff;border-color:#c3ccd6;border-inline-start-color:#c0392b}
+html.a-light .ico{background:#eef2f6;border-color:#c3ccd6;color:#7a5200}
+html.a-light .steps::before{background:#c3ccd6}
+html.a-light .steps::after{background:#b07a00}
+html.a-light .node{background:#eef2f6;color:#14181d}
+html.a-light .steps.in .node{border-color:#b07a00;color:#7a5200}
+html.a-light .step-card{background:#fff;border-color:#c3ccd6}
+html.a-light .step-card p,html.a-light .outs li,html.a-light .thanks p,html.a-light .dlg p,html.a-light .dlg ul{color:#2f3b49}
+html.a-light .outs li{background:#f4f6f9;border-color:#c3ccd6}
+html.a-light .after{background:rgba(245,184,46,.28);color:#6b4600}
+html.a-light .win,html.a-light .phone{box-shadow:0 18px 40px -18px rgba(20,24,29,.3)}
+html.a-light .phone{border-color:#c3ccd6}
+html.a-light .r,html.a-light .it{border-bottom-color:#e0e6ed}
+html.a-light .ck{border-color:#7a8695}
+html.a-light .chip{background:#e3e9f0;color:#14181d}
+html.a-light .chip.hot{background:#f5b82e;color:#0e1116}
+html.a-light .chip.late{background:#fde7e5;color:#a32117}
+html.a-light .chip.ok{background:#d9f3e6;color:#0b6b45}
+html.a-light .chip.done,html.a-light .chip.none{background:transparent;color:#46515e;box-shadow:0 0 0 1px #aab4c0 inset}
+html.a-light .toast{background:#fff4d6;color:#5c3d00;border-color:#d9a21c}
+html.a-light .toast svg{color:#8a5a00}
+html.a-light input[type=text],html.a-light input[type=tel],html.a-light input[type=email]{background:#fff;color:#14181d;border-color:#5b6775}
+html.a-light .form-error{background:#fde7e5;color:#a32117;border-color:#e08a82}
+html.a-light .tip{background:#14181d;color:#fff}
+html.a-light .thanks{border-inline-start-color:#1f9d6b}
+html.a-light .linklike:hover{color:#7a5200}
+html.a-light .ap-opt:has(input:checked){background:rgba(245,184,46,.22)}
+
+/* ניגודיות גבוהה */
+html.a-hc{color-scheme:dark;--text:#fff;--muted:#fff;--line:#fff;--edge:#fff;--card:#000;--card-2:#000;--amber:#ffe600;--red-text:#ffb3ad;--green:#7dffb8;--focus:#7dd3ff}
+html.a-hc body,html.a-hc .hero,html.a-hc section,html.a-hc footer{background:#000!important}
+html.a-hc *{color:#fff!important}
+html.a-hc .skyline,html.a-hc .live{display:none}
+html.a-hc .win,html.a-hc .panel,html.a-hc .step-card,html.a-hc .outs li,html.a-hc .problems li,html.a-hc .phone,html.a-hc .thanks,html.a-hc dialog,html.a-hc .ap-panel,html.a-hc .toast{background:#000!important;border:2px solid #fff!important}
+html.a-hc .win-head,html.a-hc .phone-top{background:#000!important;border-bottom:1px solid #fff}
+html.a-hc .r,html.a-hc .it,html.a-hc .win-cols{border-bottom:1px solid #fff!important}
+html.a-hc .chip{background:#000!important;border:1px solid #fff;box-shadow:none!important}
+html.a-hc .btn,html.a-hc .phone-btn,html.a-hc .chip.hot,html.a-hc .skip,html.a-hc .hint-btn,html.a-hc .ph,html.a-hc .a11y-fab{background:#ffe600!important;color:#000!important}
+html.a-hc .brand i{background:#ffe600!important}
+html.a-hc .node{background:#000!important;border-color:#fff!important}
+html.a-hc .steps::before{background:#fff!important}
+html.a-hc .steps::after{background:#ffe600!important}
+html.a-hc .steps.in .node,html.a-hc .ico,html.a-hc .toast svg,html.a-hc .after{color:#ffe600!important;border-color:#ffe600!important}
+html.a-hc .ico{background:#000!important;border:1px solid #fff!important}
+html.a-hc .after{background:#000!important;border:1px solid #ffe600}
+html.a-hc input[type=text],html.a-hc input[type=tel],html.a-hc input[type=email]{background:#000!important;border:2px solid #fff!important}
+html.a-hc .err,html.a-hc .form-error,html.a-hc .it.miss .st{color:#ffb3ad!important}
+html.a-hc .form-error{background:#000;border-color:#ffb3ad}
+html.a-hc .ck{border-color:#fff!important}
+html.a-hc .phone.in .it.done .ck{background:#ffe600!important;border-color:#ffe600!important}
+html.a-hc .phone.in .it.done .ck svg{color:#000!important}
+html.a-hc .tip{background:#fff!important;color:#000!important}
+html.a-hc .ap-opt input:checked{background:#ffe600;border-color:#ffe600}
+html.a-hc .ap-opt input:checked::after{border-color:#000}
+html.a-hc .problems li{border-inline-start-color:#ffe600!important}
+html.a-hc .linklike{color:#ffe600!important}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">דלגו לתוכן הראשי</a>
+
+<header class="topbar">
+  <button type="button" class="a11y-fab" id="a11y-fab" aria-haspopup="dialog" aria-expanded="false" aria-controls="ap-panel" aria-label="פתיחת הגדרות נגישות">
+    <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="13.5"/><circle cx="16" cy="8.6" r="1.6" fill="currentColor" stroke="none"/><path d="M8.5 12.2c4.8 1.4 10.2 1.4 15 0M16 13v5.2M16 18.2l-3.6 6.6M16 18.2l3.6 6.6"/></svg>
+  </button>
+
+  <div class="ap-panel" id="ap-panel" role="dialog" aria-labelledby="ap-title" hidden>
+    <div class="ap-head">
+      <p class="ap-title" id="ap-title">הגדרות נגישות</p>
+      <button type="button" class="ap-x" id="ap-close" aria-label="סגירת הגדרות נגישות">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+
+    <div class="ap-size" role="group" aria-labelledby="ap-size-l">
+      <span id="ap-size-l">גודל טקסט</span>
+      <div class="ap-ctl">
+        <button type="button" class="ap-step" id="ap-dec" aria-disabled="false">A−<span class="sr-only"> הקטנת טקסט</span></button>
+        <output class="ap-out" id="ap-out" aria-live="polite">100%</output>
+        <button type="button" class="ap-step" id="ap-inc" aria-disabled="false">A+<span class="sr-only"> הגדלת טקסט</span></button>
+      </div>
+    </div>
+
+    <div class="ap-grid">
+      <label class="ap-opt"><span>ניגודיות גבוהה</span><input type="checkbox" data-k="hc"></label>
+      <label class="ap-opt"><span>רקע בהיר</span><input type="checkbox" data-k="light"></label>
+      <label class="ap-opt"><span>גווני אפור</span><input type="checkbox" data-k="gray"></label>
+      <label class="ap-opt"><span>גופן קריא</span><input type="checkbox" data-k="readable"></label>
+      <label class="ap-opt"><span>ריווח טקסט</span><input type="checkbox" data-k="spacing"></label>
+      <label class="ap-opt"><span>הדגשת קישורים</span><input type="checkbox" data-k="links"></label>
+      <label class="ap-opt"><span>הדגשת כותרות</span><input type="checkbox" data-k="heads"></label>
+      <label class="ap-opt"><span>הדגשת מיקוד</span><input type="checkbox" data-k="focus"></label>
+      <label class="ap-opt"><span>עצירת אנימציות</span><input type="checkbox" data-k="paused"></label>
+      <label class="ap-opt"><span>סמן גדול</span><input type="checkbox" data-k="cursor"></label>
+    </div>
+
+    <div class="ap-foot">
+      <button type="button" class="ap-reset" id="ap-reset">איפוס הגדרות</button>
+      <button type="button" class="linklike" id="ap-stmt">הצהרת נגישות</button>
+    </div>
+    <p class="ap-note">ההגדרות נשמרות בדפדפן הזה, ויחולו גם בכניסה הבאה.</p>
+    <p class="sr-only" id="ap-status" role="status"></p>
+  </div>
+
+  <div class="wrap">
+    <div class="brand"><i aria-hidden="true"></i><span lang="en">ND Solutions</span></div>
+    <button type="button" class="motion-btn" id="motion-btn">השהיית תנועה</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <h1 id="h1">אתם עובדים מסביב לשעון, ועדיין עבודות דחופות מתעכבות</h1>
+        <p class="ask">אתם בעלי מפעל או מנהלים, ועמוסים מעל הראש?</p>
+        <button type="button" class="btn" data-scroll="form-section">קבעו שיחת אפיון חינמית</button>
+        <p class="micro">שיחת הכרות ואפיון חינמית</p>
+      </div>
+
+      <div class="win" role="img" aria-label="המחשה בלבד: תור עבודות שמסתדר מחדש לפי דחיפות. עבודה דחופה עולה לראש התור, ולכל עבודה מוצגים מכונה וסטטוס.">
+        <div class="win-head"><span>תור עבודות</span><small><span class="live"></span>מתעדכן אוטומטית · להמחשה בלבד</small></div>
+        <div class="win-cols" aria-hidden="true"><span>הזמנה</span><span>מכונה</span><span>סטטוס</span></div>
+        <div class="board" id="hero-board" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <svg class="skyline" viewBox="0 0 1200 150" preserveAspectRatio="none" aria-hidden="true" focusable="false" fill="currentColor">
+    <path d="M0 150V92l40-26v26l40-26v26l40-26v26l40-26v26h30V20h26v72h14V58l40-26v26l40-26v26l40-26v26h20V8h30v84h30V70h110V40h26v30h120V30h30v62l40-26v26l40-26v26l40-26v26h24V16h26v76h40V60l40-26v26l40-26v26l40-26v26h18V44h22v48h60V70h120v80z"/>
+  </svg>
+</section>
+
+<section class="problems-sec" aria-labelledby="h-problems">
+  <div class="wrap">
+    <h2 id="h-problems">מה קורה היום במפעל בלי מערכת</h2>
+    <p class="sec-sub">בעסק קטן ובינוני כמעט הכול נשען על אנשים שזוכרים, מתקשרים ומשבצים ביד.</p>
+    <ul class="problems" role="list">
+      <li>
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="5" y="8" width="16" height="16" transform="rotate(-12 13 16)"/><rect x="26" y="5" width="16" height="16" transform="rotate(10 34 13)"/><rect x="14" y="26" width="16" height="16" transform="rotate(-4 22 34)"/></svg>
+        </span>
+        <span>מי עובד על מה ועל איזו מכונה נקבע ביד, והמשימות מתערבבות.</span>
+      </li>
+      <li>
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="25" r="17"/><path d="M24 14v11l8 5M19 4h10"/></svg>
+        </span>
+        <span>עבודה דחופה נתקעת מאחורי עבודות אחרות, כי סדר העדיפויות נקבע ביד.</span>
+      </li>
+      <li>
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 48 48" focusable="false" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="8" width="30" height="34" rx="2"/><path d="M18 5h12v7H18zM16 24h16M16 32h10" stroke-dasharray="1 6"/></svg>
+        </span>
+        <span>בסוף היום אין תמונה מרוכזת של מה בוצע ומה נשאר פתוח.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="steps-sec" aria-labelledby="h-steps">
+  <div class="wrap">
+    <h2 id="h-steps">איך זה עובד</h2>
+    <p class="sec-sub">שלושה שלבים, משיחה אחת ועד מערכת שעובדת במפעל.</p>
+    <ol class="steps" id="steps" role="list">
+      <li style="--d:.2s">
+        <div class="node" aria-hidden="true">1</div>
+        <div class="step-card">
+          <h3>שיחת הכרות ואפיון חינמית</h3>
+          <p>אנחנו מבינים איך העבודה במפעל מתנהלת היום, איפה היא נתקעת ומה חשוב לכם.</p>
+        </div>
+      </li>
+      <li style="--d:1.2s">
+        <div class="node" aria-hidden="true">2</div>
+        <div class="step-card">
+          <h3>בונים מערכת מותאמת למפעל</h3>
+          <p>מערכת שמקבלת עבודות, מסדרת אותן לפי דחיפות ומשאבים, ומראה לכל עובד מה מוטל עליו.</p>
+        </div>
+      </li>
+      <li style="--d:2.2s">
+        <div class="node" aria-hidden="true">3</div>
+        <div class="step-card">
+          <h3>מכניסים אותה לעסק</h3>
+          <p>המערכת עוברת לעבודה שוטפת במפעל, והצוות עובד לפיה.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="result-sec" aria-labelledby="h-result">
+  <div class="wrap">
+    <span class="after">אחרי שהמערכת עובדת במפעל</span>
+    <h2 id="h-result">המפעל מסודר, והמשימות מתנהלות מעצמן</h2>
+
+    <ul class="outs" role="list">
+      <li><strong>כל עבודה משובצת מיד</strong>עבודה חדשה נכנסת לתור לפי תאריך אספקה, מכונות ועובדים, ברגע שהוזנה.</li>
+      <li><strong>בלי שיבוץ וחישוב ביד</strong>עבודה דחופה עולה לראש התור, והעובד רואה מה מוטל עליו היום.</li>
+      <li><strong>תמונה ברורה בסוף היום</strong>רואים מה בוצע ומה נשאר, והמנהל מקבל התראה על משימה שלא בוצעה.</li>
+    </ul>
+
+    <div class="mock-grid" id="mocks">
+      <div class="win" role="img" aria-label="המחשה בלבד: מסך מנהל. העבודות מסתדרות לפי דחיפות ומשובצות למכונות, ומופיעה התראה על הזמנה שלא דווחה כבוצעה.">
+        <div class="win-head"><span>מסך מנהל</span><small>להמחשה בלבד</small></div>
+        <div class="win-cols" aria-hidden="true"><span>הזמנה</span><span>מכונה</span><span>סטטוס</span></div>
+        <div class="board" id="mgr-board" aria-hidden="true"></div>
+        <div style="height:6rem" aria-hidden="true"></div>
+        <div class="toast" id="toast" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span>הזמנה ג׳ לא דווחה כבוצעה. התראה נשלחה למנהל.</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="phone" id="phone" role="img" aria-label="המחשה בלבד: מסך עובד לדיווח סוף יום. הזמנה א׳ והזמנה ב׳ מסומנות כבוצעו, והזמנה ג׳ מסומנת כלא בוצעה.">
+          <div class="phone-top" aria-hidden="true">דיווח סוף יום<small>מסך עובד · להמחשה בלבד</small></div>
+          <div class="it done" style="--d:.3s" aria-hidden="true"><span class="ck"><svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>הזמנה א׳<span class="st">בוצע</span></div>
+          <div class="it done" style="--d:.8s" aria-hidden="true"><span class="ck"><svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>הזמנה ב׳<span class="st">בוצע</span></div>
+          <div class="it miss" aria-hidden="true"><span class="ck"></span>הזמנה ג׳<span class="st">לא בוצע</span></div>
+          <div class="phone-btn" aria-hidden="true">שליחת דיווח</div>
+        </div>
+        <p class="mock-note">העובד מדווח מהטלפון, והמנהל רואה את התמונה.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-sec" id="form-section" aria-labelledby="h-form">
+  <div class="hazard" aria-hidden="true"></div>
+  <div class="wrap form-inner">
+    <div id="form-area">
+      <h2 id="h-form">נתחיל בשיחה קצרה</h2>
+      <p class="lead">משאירים טלפון ואנחנו חוזרים אליכם לקביעת שיחת הכרות ואפיון חינמית.</p>
+      <p class="req-note">כל השדות חובה, חוץ מאלה שמסומנים כ״לא חובה״.</p>
+
+      <form id="lead-form" class="panel" novalidate aria-labelledby="h-form">
+        <div class="field">
+          <label for="first-name">שם פרטי</label>
+          <input type="text" id="first-name" name="firstName" autocomplete="given-name" aria-required="true" aria-describedby="e-first-name">
+          <div class="err" id="e-first-name" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="phone-input">טלפון</label>
+          <input type="tel" id="phone-input" name="phone" autocomplete="tel" inputmode="tel" dir="ltr" style="text-align:right" aria-required="true" aria-describedby="e-phone">
+          <div class="err" id="e-phone" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="business-name">שם העסק</label>
+          <input type="text" id="business-name" name="businessName" autocomplete="organization" aria-required="true" aria-describedby="e-business-name">
+          <div class="err" id="e-business-name" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="business-type">סוג העסק</label>
+          <input type="text" id="business-type" name="businessType" aria-required="true" aria-describedby="e-business-type">
+          <div class="err" id="e-business-type" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">אימייל <span class="opt">(לא חובה)</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" dir="ltr" style="text-align:right" aria-describedby="e-email">
+          <div class="err" id="e-email" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="website">
+            <span>אתר או דף של העסק <span class="opt">(לא חובה)</span></span>
+            <span class="hint" id="hint">
+              <button type="button" class="hint-btn" id="hint-btn" aria-label="למה אנחנו מבקשים את הכתובת" aria-expanded="false" aria-describedby="tip">*</button>
+              <span class="tip" id="tip" role="tooltip">כדי להתכונן לשיחה ולתת לכם כמה שיותר ערך.</span>
+            </span>
+          </label>
+          <input type="text" id="website" name="website" autocomplete="url" inputmode="url" dir="ltr" style="text-align:right">
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label for="company-url">אל תמלאו שדה זה</label>
+          <input type="text" id="company-url" name="companyUrl" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="form-error" id="form-error" role="alert"></div>
+
+        <button type="submit" class="btn" id="submit-btn">קבעו שיחת אפיון חינמית</button>
+        <p class="privacy">הפרטים משמשים רק לתיאום שיחת ההכרות והאפיון.</p>
+      </form>
+    </div>
+
+    <div class="thanks" id="thanks" hidden tabindex="-1" role="status">
+      <h3>הפרטים התקבלו</h3>
+      <p>נעבור על הפרטים שמסרתם ונחזור אליכם לתיאום שיחת הכרות ואפיון חינמית.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span lang="en">ND Solutions</span>
+  <button type="button" class="linklike" id="open-stmt">הצהרת נגישות</button>
+</footer>
+
+<dialog id="stmt" aria-labelledby="stmt-title">
+  <div class="dlg">
+    <h2 id="stmt-title">הצהרת נגישות</h2>
+    <p><span lang="en">ND Solutions</span> רואה חשיבות בכך שכל אדם, כולל אנשים עם מוגבלות, יוכל להשתמש באתר בעצמאות ובנוחות. נעשו מאמצים להתאים את האתר לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע״ג-2013, ולתקן הישראלי ת״י 5568 ברמה AA, המבוסס על הנחיות <span lang="en">WCAG</span>.</p>
+
+    <h3>התאמות שבוצעו באתר</h3>
+    <ul>
+      <li>ניווט ושימוש מלאים במקלדת, וסימון ברור של הרכיב הפעיל.</li>
+      <li>קישור דילוג לתוכן הראשי בתחילת הדף.</li>
+      <li>מבנה כותרות ואזורים שמתאימים לקוראי מסך.</li>
+      <li>ניגודיות צבעים מספקת, והמידע לא מועבר בצבע בלבד.</li>
+      <li>טופס עם תוויות לכל שדה והודעות שגיאה ברורות, שמסבירות מה לתקן.</li>
+      <li>כפתור שמשהה את התנועה בדף. התנועה מושבתת מראש למי שהגדיר במכשיר הפחתת תנועה.</li>
+      <li>טקסט שניתן להגדיל בהגדרות הדפדפן, והתאמה לתצוגה בטלפון ובמסכים קטנים.</li>
+    </ul>
+
+    <h3>מגבלות ידועות</h3>
+    <p>חלון הצ׳אט באתר הוא כלי חיצוני של ספק צד שלישי. ייתכן שאינו נגיש במלואו. אפשר לפנות אלינו בדרכים המפורטות להלן ולקבל שירות חלופי.</p>
+
+    <h3>פנייה לרכז הנגישות</h3>
+    <p>נתקלתם בקושי, או רוצים להציע שיפור? נשמח לשמוע ולטפל בפנייה.</p>
+    <p>רכז הנגישות: <span class="ph">שם הרכז</span><br>
+    טלפון: <span class="ph" dir="ltr">מספר טלפון</span><br>
+    אימייל: <span class="ph" dir="ltr">כתובת אימייל</span></p>
+
+    <p>הצהרה זו עודכנה לאחרונה בתאריך 25.10.2026.</p>
+    <button type="button" class="btn" id="close-stmt">סגירה</button>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  // כתובת ה-Webhook ב-Make. יש להדביק כאן לפני העלאה.
+  var WEBHOOK_URL = "";
+  // כתובת מייל להצגה בהודעת כישלון (טקסט בלבד, בלי קישור). יש להחליף בכתובת אמיתית.
+  var CONTACT_EMAIL = "info@example.com";
+
+  var root = document.documentElement;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- השהיית תנועה ---------- */
+  var motionBtn = document.getElementById("motion-btn");
+  function isPaused() { return root.classList.contains("paused"); }
+  function setPaused(p) {
+    root.classList.toggle("paused", p);
+    motionBtn.textContent = p ? "הפעלת תנועה" : "השהיית תנועה";
+    var cbp = document.querySelector('[data-k="paused"]');
+    if (cbp) cbp.checked = p;
+  }
+
+  /* ---------- תפריט הנגישות: מצב, שמירה והחלה ---------- */
+  var KEY = "nd-a11y-v1";
+  var DEFAULTS = { scale: 100, hc: false, light: false, gray: false, readable: false, spacing: false, links: false, heads: false, focus: false, cursor: false, paused: null };
+  var st = JSON.parse(JSON.stringify(DEFAULTS));
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved && typeof saved === "object") {
+      Object.keys(DEFAULTS).forEach(function (k) { if (k in saved) st[k] = saved[k]; });
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  var CLS = { hc: "a-hc", light: "a-light", gray: "a-gray", readable: "a-readable", spacing: "a-spacing", links: "a-links", heads: "a-heads", focus: "a-focus", cursor: "a-cursor" };
+  var apOut = document.getElementById("ap-out");
+  var apDec = document.getElementById("ap-dec");
+  var apInc = document.getElementById("ap-inc");
+  var apStatus = document.getElementById("ap-status");
+  function applyAll() {
+    st.scale = Math.min(200, Math.max(80, Number(st.scale) || 100));
+    root.style.fontSize = st.scale === 100 ? "" : st.scale + "%";
+    Object.keys(CLS).forEach(function (k) {
+      root.classList.toggle(CLS[k], !!st[k]);
+      var cb = document.querySelector('[data-k="' + k + '"]');
+      if (cb) cb.checked = !!st[k];
+    });
+    apOut.textContent = st.scale + "%";
+    apDec.setAttribute("aria-disabled", st.scale <= 80 ? "true" : "false");
+    apInc.setAttribute("aria-disabled", st.scale >= 200 ? "true" : "false");
+    setPaused(st.paused === null ? reduced : !!st.paused);
+  }
+  applyAll();
+
+  document.querySelectorAll(".ap-opt input").forEach(function (cb) {
+    cb.addEventListener("change", function () {
+      var k = cb.getAttribute("data-k");
+      if (k === "paused") { st.paused = cb.checked; }
+      else {
+        st[k] = cb.checked;
+        if (k === "hc" && cb.checked) st.light = false;
+        if (k === "light" && cb.checked) st.hc = false;
+      }
+      applyAll(); save();
+    });
+  });
+  function step(d) {
+    var el = d > 0 ? apInc : apDec;
+    if (el.getAttribute("aria-disabled") === "true") return;
+    st.scale += d * 10; applyAll(); save();
+  }
+  apDec.addEventListener("click", function () { step(-1); });
+  apInc.addEventListener("click", function () { step(1); });
+  document.getElementById("ap-reset").addEventListener("click", function () {
+    st = JSON.parse(JSON.stringify(DEFAULTS));
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    applyAll();
+    apStatus.textContent = "ההגדרות אופסו";
+  });
+  motionBtn.addEventListener("click", function () { st.paused = !isPaused(); applyAll(); save(); });
+
+  // פתיחה וסגירה של החלונית (לא חוסמת את הדף, כדי לראות את השינוי בזמן אמת)
+  var apFab = document.getElementById("a11y-fab");
+  var apPanel = document.getElementById("ap-panel");
+  function openPanel() {
+    apPanel.hidden = false;
+    apFab.setAttribute("aria-expanded", "true");
+    apFab.setAttribute("aria-label", "סגירת הגדרות נגישות");
+    document.getElementById("ap-close").focus();
+  }
+  function closePanel(returnFocus) {
+    apPanel.hidden = true;
+    apFab.setAttribute("aria-expanded", "false");
+    apFab.setAttribute("aria-label", "פתיחת הגדרות נגישות");
+    if (returnFocus) apFab.focus();
+  }
+  apFab.addEventListener("click", function () { if (apPanel.hidden) openPanel(); else closePanel(true); });
+  document.getElementById("ap-close").addEventListener("click", function () { closePanel(true); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !apPanel.hidden && !document.getElementById("stmt").open &&
+        (apPanel.contains(document.activeElement) || document.activeElement === apFab)) {
+      closePanel(true);
+    }
+  });
+
+  /* ---------- לוחות עבודה מונפשים (נתוני הדגמה בלבד) ---------- */
+  var JOBS = { A: "הזמנה א׳", B: "הזמנה ב׳", C: "הזמנה ג׳", D: "הזמנה ד׳", E: "הזמנה ה׳" };
+
+  function buildBoard(el, keys) {
+    el.innerHTML = "";
+    keys.forEach(function (k, i) {
+      var r = document.createElement("div");
+      r.className = "r";
+      r.setAttribute("data-k", k);
+      r.style.setProperty("--i", i);
+      r.innerHTML = '<span class="nm"></span><span class="mc"></span><span class="chip"></span>';
+      r.querySelector(".nm").textContent = JOBS[k];
+      el.appendChild(r);
+    });
+    el.style.setProperty("--n", keys.length);
+  }
+  function setState(el, st) {
+    st.forEach(function (x, i) {
+      var r = el.querySelector('[data-k="' + x[0] + '"]');
+      r.style.setProperty("--i", i);
+      r.querySelector(".mc").textContent = x[1];
+      var c = r.querySelector(".chip");
+      c.textContent = x[3];
+      c.className = "chip " + x[2];
+    });
+  }
+
+  var heroBoard = document.getElementById("hero-board");
+  var heroStates = [
+    [["A","מכונה 1","hot","דחוף"],["B","מכונה 2","late","באיחור"],["C","מכונה 1","idle","היום"],["D","מכונה 3","idle","מחר"],["E","מכונה 2","idle","השבוע"]],
+    [["E","מכונה 3","hot","דחוף"],["A","מכונה 1","ok","בייצור"],["B","מכונה 2","late","באיחור"],["C","מכונה 1","idle","היום"],["D","מכונה 3","idle","מחר"]],
+    [["B","מכונה 2","hot","דחוף"],["E","מכונה 3","ok","בייצור"],["C","מכונה 1","ok","בייצור"],["D","מכונה 3","idle","מחר"],["A","מכונה 1","done","הושלם"]],
+    [["C","מכונה 1","hot","דחוף"],["B","מכונה 2","ok","בייצור"],["D","מכונה 3","idle","היום"],["E","מכונה 3","done","הושלם"],["A","מכונה 1","done","הושלם"]]
+  ];
+  buildBoard(heroBoard, ["A","B","C","D","E"]);
+  setState(heroBoard, heroStates[0]);
+  var hs = 0;
+  setInterval(function () {
+    if (document.hidden || isPaused()) return;
+    hs = (hs + 1) % heroStates.length;
+    setState(heroBoard, heroStates[hs]);
+  }, 3600);
+
+  var mgrBoard = document.getElementById("mgr-board");
+  buildBoard(mgrBoard, ["C","A","D","B"]);
+  setState(mgrBoard, [["C","—","none","לא משובץ"],["A","—","none","לא משובץ"],["D","—","none","לא משובץ"],["B","—","none","לא משובץ"]]);
+  var mgrSorted = [["A","מכונה 1","hot","דחוף"],["B","מכונה 2","ok","בייצור"],["C","מכונה 1","idle","היום"],["D","מכונה 3","idle","מחר"]];
+
+  function playMocks() {
+    setState(mgrBoard, mgrSorted);
+    document.getElementById("phone").classList.add("in");
+    setTimeout(function () { document.getElementById("toast").classList.add("show"); }, isPaused() ? 0 : 2200);
+  }
+
+  function onView(el, fn, threshold) {
+    if (!("IntersectionObserver" in window)) { fn(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { fn(); io.disconnect(); }
+      });
+    }, { threshold: threshold || 0.35 });
+    io.observe(el);
+  }
+  onView(document.getElementById("steps"), function () { document.getElementById("steps").classList.add("in"); }, 0.4);
+  onView(document.getElementById("mocks"), playMocks, 0.4);
+
+  /* ---------- הצהרת נגישות ---------- */
+  var stmt = document.getElementById("stmt");
+  var lastOpener = null;
+  [document.getElementById("open-stmt"), document.getElementById("ap-stmt")].forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      lastOpener = btn;
+      if (typeof stmt.showModal === "function") stmt.showModal(); else stmt.setAttribute("open", "");
+    });
+  });
+  function closeStmt() {
+    if (typeof stmt.close === "function") stmt.close(); else stmt.removeAttribute("open");
+    if (lastOpener) lastOpener.focus();
+  }
+  document.getElementById("close-stmt").addEventListener("click", closeStmt);
+  stmt.addEventListener("click", function (e) { if (e.target === stmt) closeStmt(); });
+
+  /* ---------- טופס ---------- */
+  var form = document.getElementById("lead-form");
+  var submitBtn = document.getElementById("submit-btn");
+  var formError = document.getElementById("form-error");
+  var formArea = document.getElementById("form-area");
+  var thanks = document.getElementById("thanks");
+  var sending = false;
+
+  document.querySelectorAll("[data-scroll]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var target = document.getElementById(b.getAttribute("data-scroll"));
+      target.scrollIntoView({ behavior: isPaused() ? "auto" : "smooth", block: "start" });
+      setTimeout(function () { document.getElementById("first-name").focus({ preventScroll: true }); }, 600);
+    });
+  });
+
+  // הסבר לכוכבית: נפתח בריחוף, במיקוד ובלחיצה; ניתן לסגירה ב-Escape
+  var hint = document.getElementById("hint");
+  var hintBtn = document.getElementById("hint-btn");
+  function hintShown() { return hint.classList.contains("open"); }
+  hintBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    hint.classList.remove("closed");
+    var open = !hintShown();
+    hint.classList.toggle("open", open);
+    hintBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", function () {
+    hint.classList.remove("open");
+    hintBtn.setAttribute("aria-expanded", "false");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      hint.classList.remove("open");
+      hint.classList.add("closed");
+      hintBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+  hint.addEventListener("mouseleave", function () { hint.classList.remove("closed"); });
+  hint.addEventListener("focusout", function () { hint.classList.remove("closed"); });
+
+  function phoneOk(v) {
+    // מספרים, רווחים, מקפים, סוגריים ו-+ בלבד; 9 עד 15 ספרות
+    if (!/^[0-9+\-()\s]+$/.test(v)) return false;
+    var digits = v.replace(/\D/g, "");
+    return digits.length >= 9 && digits.length <= 15;
+  }
+  function emailOk(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  }
+
+  var required = [
+    { id: "first-name", err: "e-first-name" },
+    { id: "phone-input", err: "e-phone", check: phoneOk, msg: "מספר הטלפון לא תקין. הזינו מספר עם קידומת, לדוגמה 050-1234567" },
+    { id: "business-name", err: "e-business-name" },
+    { id: "business-type", err: "e-business-type" },
+    { id: "email", err: "e-email", optional: true, check: emailOk, msg: "כתובת האימייל לא תקינה. בדקו אותה או השאירו את השדה ריק" }
+  ];
+
+  function validate() {
+    var firstBad = null;
+    required.forEach(function (f) {
+      var input = document.getElementById(f.id);
+      var errEl = document.getElementById(f.err);
+      var v = input.value.trim();
+      var message = "";
+      if (!v) {
+        if (!f.optional) message = "שדה חובה";
+      } else if (f.check && !f.check(v)) {
+        message = f.msg;
+      }
+      if (message) {
+        errEl.textContent = message;
+        input.setAttribute("aria-invalid", "true");
+        if (!firstBad) firstBad = input;
+      } else {
+        errEl.textContent = "";
+        input.removeAttribute("aria-invalid");
+      }
+    });
+    if (firstBad) firstBad.focus();
+    return !firstBad;
+  }
+
+  required.forEach(function (f) {
+    document.getElementById(f.id).addEventListener("input", function () {
+      document.getElementById(f.err).textContent = "";
+      this.removeAttribute("aria-invalid");
+    });
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (sending) return;
+    formError.textContent = "";
+    if (!validate()) return;
+
+    // שדה מלכודת: בוט מילא אותו. מציגים הצלחה בלי לשלוח.
+    if (document.getElementById("company-url").value) { showThanks(); return; }
+
+    var payload = {
+      firstName: document.getElementById("first-name").value.trim(),
+      phone: document.getElementById("phone-input").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      businessName: document.getElementById("business-name").value.trim(),
+      businessType: document.getElementById("business-type").value.trim(),
+      website: document.getElementById("website").value.trim(),
+      sentAt: new Date().toISOString()
+    };
+
+    sending = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "שולח...";
+
+    if (!WEBHOOK_URL) { fail(); return; }
+
+    fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) throw new Error("bad status");
+      showThanks();
+    }).catch(fail);
+  });
+
+  function fail() {
+    sending = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = "קבעו שיחת אפיון חינמית";
+    formError.textContent = "השליחה לא עברה והפרטים לא נשמרו. נסו שוב בעוד רגע, ואם זה חוזר, שלחו לנו את הפרטים במייל: " + CONTACT_EMAIL;
+  }
+
+  function showThanks() {
+    formArea.hidden = true;
+    thanks.hidden = false;
+    thanks.focus();
+  }
+})();
+</script>
+
+<script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/10/21/17/20261021172328-0EXFR1PS.js" defer></script>
+</body>
+</html>
